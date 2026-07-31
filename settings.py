@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # Express API (Node backend)
-    backend_url: str = "http://localhost:4000"
+    backend_url: str = "https://name-happening-helpless.ngrok-free.dev "  #"http://localhost:4000"
     internal_api_key: str = "dev-internal-key-change-me"
 
     # Which ERP user the MCP server pretends to be (controls permissions)
