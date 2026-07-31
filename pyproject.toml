@@ -1,0 +1,15 @@
+[project]
+name = "ai-sales-mcp"
+version = "1.0.0"
+description = "FastMCP server for AI Sales ERP — exposes backend tools over stdio"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp",
+    "httpx",
+    "pydantic-settings",
+    "python-dotenv",
+]
+
+[tool.uv]
+package = false
