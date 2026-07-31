@@ -32,13 +32,24 @@ async def get_erp_data(path: str, params: dict | None = None) -> Any:
         "X-Internal-Key": settings.internal_api_key,
         "X-Acting-User-Id": settings.mcp_acting_user_id,
         "Content-Type": "application/json",
+        # Free ngrok interstitial can block non-browser clients without this.
+        "ngrok-skip-browser-warning": "1",
     }
 
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.get(url, headers=headers, params=params)
-        if response.status_code >= 400:
-            raise RuntimeError(f"Backend error {response.status_code}: {response.text}")
-        return response.json()
+    try:
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.get(url, headers=headers, params=params)
+            if response.status_code >= 400:
+                raise RuntimeError(
+                    f"Backend error {response.status_code} for {url}: {response.text}"
+                )
+            return response.json()
+    except httpx.HTTPError as exc:
+        raise RuntimeError(
+            f"Failed to reach backend at {url!r} "
+            f"(BACKEND_URL={settings.backend_url!r}). "
+            f"On Horizon, env changes need a new build/deploy. Cause: {exc}"
+        ) from exc
 
 
 def to_json(data: Any) -> str:
